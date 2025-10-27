@@ -35,6 +35,9 @@ state.json
 games_state.json
 debug_page.html
 
+# Environment variables
+.env
+
 # IDE
 .vscode/
 .idea/

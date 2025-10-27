@@ -3,9 +3,15 @@ TSV 1860 München Ticket Monitor
 Main entry point - runs the scraper on a schedule.
 """
 
+import os
 import logging
+from dotenv import load_dotenv
 from apscheduler.schedulers.blocking import BlockingScheduler
 from scraper import get_games, check_for_new_games, save_state
+from notifier import notify_new_games
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Setup logging
 logging.basicConfig(
@@ -15,7 +21,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Configuration
-CHECK_INTERVAL_MINUTES = 1
+CHECK_INTERVAL_MINUTES = int(os.getenv("CHECK_INTERVAL_MINUTES", "10"))
 
 
 def scheduled_check():
@@ -34,8 +40,12 @@ def scheduled_check():
             logger.info(f"🎉 Found {len(new_games)} NEW game(s)!")
             for game in new_games:
                 logger.info(f"  NEW: {game}")
-            # TODO: Send email notification here
-            logger.info("📧 Email notification would be sent here")
+            
+            # Send Telegram notification
+            if notify_new_games(new_games):
+                logger.info("Telegram notification sent successfully")
+            else:
+                logger.warning("Telegram notification failed or not configured")
         else:
             logger.info("No new games found")
         

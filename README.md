@@ -1,8 +1,7 @@
 # 60tix - TSV 1860 München Ticket Monitor
 
-Automatically monitors the [TSV 1860 München ticketing website](https://www.tsv1860-ticketing.de/tsv1860/) for new games and sends email notifications when new tickets become available.
+Automatically monitors the [TSV 1860 München ticketing website](https://www.tsv1860-ticketing.de/tsv1860/) for new games and sends Telegram notifications when new tickets become available.
 
-## Features
 ## Requirements
 
 - Python 3.13+
@@ -21,6 +20,64 @@ uv sync
 ```bash
 uv run playwright install chromium
 ```
+
+3. Configure Telegram notifications (optional but recommended):
+
+```bash
+# Copy the example env file
+cp .env.example .env
+
+# Edit .env and add your Telegram credentials
+# See "Telegram Setup" section below for details
+```
+
+## Telegram Setup
+
+To receive notifications when new tickets are available:
+
+### 1. Create a Telegram Bot
+
+1. Open Telegram and search for `@BotFather`
+2. Send `/newbot`
+3. Follow prompts to create your bot
+4. **Save the bot token** (looks like `1234567890:ABCdefGHI...`)
+
+### 2. Get Your Chat ID
+
+**For personal notifications:**
+1. Search for `@userinfobot` on Telegram
+2. Start a chat with it
+3. It will reply with your **Chat ID** (e.g., `123456789`)
+
+**For group notifications:**
+1. Create a Telegram group
+2. Add your bot to the group
+3. Make bot admin (or allow all members to post)
+4. Add `@RawDataBot` to your group temporarily
+5. It will post the group info including **Chat ID** (negative number like `-1001234567890`)
+6. Remove @RawDataBot from group
+
+Alternativly:
+- Login to telegram web
+- Go to the chat/group you want to add
+- Copy the group **Chat ID** out of the URL (the number after #)
+
+### 3. Configure Environment Variables
+
+Edit `.env` file:
+```bash
+TELEGRAM_BOT_TOKEN=your_bot_token_from_botfather
+TELEGRAM_CHAT_ID=your_chat_id_or_group_id
+CHECK_INTERVAL_MINUTES=10
+```
+
+### 4. Test Your Setup
+
+```bash
+uv run python test_telegram.py
+```
+
+If successful, you'll receive a test message on Telegram!
 
 ## Usage
 
@@ -47,96 +104,14 @@ Test the scraper without starting the scheduler:
 uv run python scraper.py
 ```
 
-## How It Works
-
-1. **Initial Check**: On startup, fetches the current games from the ticketing website
-2. **State Tracking**: Saves game data to `state.json` 
-3. **Scheduled Checks**: Every 10 minutes, re-fetches the page and compares with saved state
-4. **New Game Detection**: Identifies games that weren't present in the previous check
-5. **Notifications**: Logs new games (email notifications to be implemented)
-
-## Project Structure
-
-```
-60tix/
-├── main.py              # Main entry point with scheduler
-├── scraper.py           # Web scraper logic
-├── pyproject.toml       # UV project configuration
-├── state.json           # Current game state (auto-generated)
-└── README.md
-```
-
 ## Configuration
 
-Currently hardcoded values:
-- Check interval: 10 minutes
-- Target URL: https://www.tsv1860-ticketing.de/tsv1860/
+Configure via `.env` file:
+- `TELEGRAM_BOT_TOKEN`: Your bot token from @BotFather
+- `TELEGRAM_CHAT_ID`: Your chat or group ID
+- `CHECK_INTERVAL_MINUTES`: How often to check (default: 10)
 
-## Upcoming Features
-
-- [ ] Email notifications via SMTP
-- [ ] Configurable check intervals
-- [ ] Filter games by criteria (date, opponent, etc.)
-- [ ] Automatic ticket booking
-- [ ] Web dashboard for monitoring
-
-## Game Data Structure
-
-Each game contains:
-- `game_id`: Unique identifier (UUID)
-- `teams`: Match description (e.g., "TSV 1860 München vs. 1.FC Saarbrücken")
-- `matchday`: Home game number (e.g., "8. Heimspiel")
-- `date`: Game date (e.g., "So. 23.11.2025")
-- `time`: Kickoff time (e.g., "13:30")
-
-State file (`state.json`) structure:
-```json
-{
-  "started": "2025-10-27T08:00:00",
-  "last_updated": "2025-10-27T12:00:00",
-  "games": [
-    {
-      "game_id": "abc-123-def-456",
-      "teams": "TSV 1860 München vs. FC Energie Cottbus",
-      "matchday": "7. Heimspiel",
-      "date": "Sa. 01.11.2025",
-      "time": "14:00"
-    }
-  ]
-}
-```
-
-Fields:
-- `started`: Timestamp when bot was first started (set once, never changes)
-- `last_updated`: Timestamp of last state update
-- `games`: Array of currently available games
-
-## Troubleshooting
-
-### Queue System
-The ticketing website uses a queue/waiting room system during high traffic. The scraper uses Playwright to:
-1. Detect when in the waiting room
-2. Wait for the queue to pass (up to 5 minutes)
-3. Automatically click "Zum Shop" button to enter
-4. Continue with the scraping
-
-If the queue takes longer than 5 minutes, the scraper will timeout and retry on the next scheduled check.
-
-### No Games Found
-If no games are found:
-1. Check the website manually to verify games are listed
-2. The HTML structure may have changed - check `scraper.py` parsing logic
-3. Run with debug logging: modify `logging.basicConfig(level=logging.DEBUG)`
-
-## Development
-
-### Adding Email Notifications
-
-To implement email notifications, edit `main.py` in the `scheduled_check()` function where it says:
-
-```python
-# TODO: Send email notification here
-```
+Target URL: https://www.tsv1860-ticketing.de/tsv1860/
 
 ## License
 
