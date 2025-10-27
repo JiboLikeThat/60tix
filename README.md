@@ -35,12 +35,22 @@ uv run python -m src.main
 
 **See [python/README.md](./python/README.md) for full documentation.**
 
-### 🦀 Rust _(Coming Soon)_
+### 🦀 [Rust](./rust/)
 High-performance implementation with minimal resource usage.
-- 🚧 **In development**
-- Planned features: tokio async runtime, headless_chrome
-- Lower memory footprint
-- Faster startup time
+- ✅ **Production ready**
+- Headless Chrome for browser automation
+- Tokio async runtime & tokio-cron-scheduler
+- ~25MB memory usage (vs ~80MB Python)
+- Fast startup (~1-2s vs ~3-5s Python)
+
+**Quick Start:**
+```bash
+cd rust
+cargo build --release
+./target/release/sixtix
+```
+
+**See [rust/README.md](./rust/README.md) for full documentation.**
 
 ## Notifications
 
