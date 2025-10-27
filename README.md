@@ -84,8 +84,6 @@ If successful, you'll receive a test message on Telegram!
 
 ### Run the Monitor
 
-Start the ticket monitor (performs initial check, then checks every X minutes):
-
 ```bash
 uv run python -m src.main
 ```

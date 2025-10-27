@@ -4,6 +4,7 @@ Main entry point - runs the scraper on a schedule.
 """
 
 import os
+import sys
 import logging
 from datetime import datetime
 from dotenv import load_dotenv
@@ -115,30 +116,6 @@ def health_check():
         logger.error(f"Error during health check: {e}", exc_info=True)
 
 
-def initalize_games_state():
-    """Perform the initial check on startup - saves current games as baseline."""
-    logger.info("Performing initial check...")
-    try:
-        games = get_games()
-        
-        if not games:
-            logger.error("No games found - cannot initialize baseline")
-            return False
-        
-        logger.info(f"Found {len(games)} game(s) - saving as baseline")
-        for game in games:
-            logger.info(f"{game}")
-        
-        # Save as baseline
-        save_state(games)
-        logger.info("Initial check complete - baseline saved")
-        return True
-        
-    except Exception as e:
-        logger.error(f"Initial check failed: {e}", exc_info=True)
-        return False
-
-
 def setup_scheduler():
     """Configure and return the scheduler."""
     scheduler = BlockingScheduler()
@@ -206,9 +183,7 @@ def main():
     logger.info("Starting TSV 1860 München Ticket Monitor")
     logger.info(f"Started at: {bot_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
     logger.info("=" * 60)
-    
-    # Perform initial check
-    initalize_games_state()
+    logger.info("State will be initialized on first check if needed")
     logger.info("=" * 60)
     
     # Setup and run scheduler to check every X minutes

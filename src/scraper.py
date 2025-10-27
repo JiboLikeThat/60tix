@@ -232,12 +232,23 @@ def get_games() -> List[Game]:
 
 def check_for_new_games(games: List[Game]) -> List[Game]:
     """
-    Check for new games compared to the games list.
+    Check for new games compared to the saved state.
+    
+    On first run (no state file), saves current games without marking them as new.
+    On subsequent runs, returns games that weren't in the previous state.
     
     Returns:
-        List of new games.
+        List of new games (empty on first run).
     """
     previous_games = load_state()
+    
+    # First run - no state file exists
+    if not previous_games:
+        logger.info("First run detected - saving current games as baseline")
+        save_state(games)
+        return []  # Don't notify about games on first run
+    
+    # Normal operation - check for new games
     new_games = [game for game in games if game.game_id not in previous_games]
     return new_games
 
