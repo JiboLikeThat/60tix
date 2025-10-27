@@ -6,6 +6,7 @@ Sends alerts when new games are detected
 import os
 import logging
 from typing import List, Optional
+from datetime import datetime
 import requests
 
 from .scraper import Game
@@ -135,4 +136,49 @@ def notify_new_games(games: List[Game]) -> bool:
     else:
         logger.info("ℹ️  Telegram notifications not configured - skipping")
         return False
+
+
+def send_health_check(start_time, uptime: str, check_count: int, last_check: str) -> bool:
+    """
+    Send daily health check status to Telegram.
+    Returns True if sent successfully, False otherwise.
+    """
+    notifier = create_notifier()
+    if not notifier:
+        logger.info("ℹ️  Telegram notifications not configured - skipping health check")
+        return False
+    
+    # Build health check message
+    message = "🏥 <b>Bot Health Check</b>\n\n"
+    message += "✅ <b>Status:</b> Running\n\n"
+    
+    if start_time:
+        message += f"🕐 <b>Started:</b> {start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
+    message += f"⏱️ <b>Uptime:</b> {uptime}\n"
+    message += f"🔄 <b>Checks performed:</b> {check_count}\n"
+    message += f"📅 <b>Last check:</b> {last_check}\n"
+    
+    return notifier.send_message(message)
+
+
+def send_shutdown_notification(start_time, uptime: str, check_count: int) -> bool:
+    """
+    Send shutdown notification to Telegram.
+    Returns True if sent successfully, False otherwise.
+    """
+    notifier = create_notifier()
+    if not notifier:
+        logger.info("ℹ️  Telegram notifications not configured - skipping shutdown notification")
+        return False
+    
+    # Build shutdown message
+    message = "🛑 <b>Bot Shutting Down</b>\n\n"
+    
+    if start_time:
+        message += f"🕐 <b>Started:</b> {start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
+        message += f"🕑 <b>Stopped:</b> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    message += f"⏱️ <b>Total uptime:</b> {uptime}\n"
+    message += f"🔄 <b>Total checks:</b> {check_count}\n"
+    
+    return notifier.send_message(message)
 

@@ -66,7 +66,7 @@ def fetch_page() -> str:
             
             # Check if we're in the waiting room
             if 'waiting-room' in page.url or 'Warteraum' in page.title():
-                logger.info("⏳ Entered waiting room, waiting for queue to pass...")
+                logger.info("Entered waiting room, waiting for queue to pass...")
                 
                 # Wait for the "Zum Shop" button to appear (max 5 minutes)
                 try:
