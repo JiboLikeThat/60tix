@@ -74,7 +74,7 @@ CHECK_INTERVAL_MINUTES=10
 ### 4. Test Your Setup
 
 ```bash
-uv run python test_telegram.py
+uv run python -m src.tests.test_telegram
 ```
 
 If successful, you'll receive a test message on Telegram!
@@ -86,14 +86,14 @@ If successful, you'll receive a test message on Telegram!
 Start the ticket monitor (performs initial check, then checks every X minutes):
 
 ```bash
-uv run python main.py
+uv run python -m src.main
 ```
 
 Or activate the virtual environment first:
 
 ```bash
 source .venv/bin/activate  # On macOS/Linux
-python main.py
+python -m src.main
 ```
 
 ### Test the Scraper
@@ -101,7 +101,7 @@ python main.py
 Test the scraper without starting the scheduler:
 
 ```bash
-uv run python scraper.py
+uv run python -m src.scraper
 ```
 
 ## Configuration

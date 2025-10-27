@@ -8,7 +8,7 @@ import logging
 from typing import List, Optional
 import requests
 
-from scraper import Game
+from .scraper import Game
 
 logger = logging.getLogger(__name__)
 

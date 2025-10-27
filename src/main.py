@@ -7,8 +7,8 @@ import os
 import logging
 from dotenv import load_dotenv
 from apscheduler.schedulers.blocking import BlockingScheduler
-from scraper import get_games, check_for_new_games, save_state
-from notifier import notify_new_games
+from .scraper import get_games, check_for_new_games, save_state
+from .notifier import notify_new_games
 
 # Load environment variables from .env file
 load_dotenv()

@@ -5,8 +5,8 @@ Run this to verify your bot token and chat ID are working
 
 import os
 from dotenv import load_dotenv
-from notifier import create_notifier
-from scraper import Game
+from ..notifier import create_notifier
+from ..scraper import Game
 
 # Load environment variables
 load_dotenv()
