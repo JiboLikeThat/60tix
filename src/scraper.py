@@ -162,8 +162,6 @@ def parse_games(html: str) -> List[Game]:
         except Exception as e:
             logger.warning(f"Failed to parse game div: {e}")
             continue
-    
-    logger.info(f"Found {len(games)} games")
     return games
 
 
@@ -229,7 +227,6 @@ def get_games() -> List[Game]:
     html = fetch_page()
     games = parse_games(html)
     if not games:
-        logger.error("No games found")
         return []
     return games
 

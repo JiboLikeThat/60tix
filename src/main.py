@@ -118,7 +118,6 @@ def health_check():
 def initalize_games_state():
     """Perform the initial check on startup - saves current games as baseline."""
     logger.info("Performing initial check...")
-    logger.info("=" * 60)
     try:
         games = get_games()
         
@@ -128,7 +127,7 @@ def initalize_games_state():
         
         logger.info(f"Found {len(games)} game(s) - saving as baseline")
         for game in games:
-            logger.info(f"  - {game}")
+            logger.info(f"{game}")
         
         # Save as baseline
         save_state(games)
@@ -153,7 +152,9 @@ def setup_scheduler():
         name='Check for new games',
         max_instances=1
     )
-    
+
+    logger.info(f"Ticket check scheduled every {CHECK_INTERVAL_MINUTES} minutes")
+
     # Add daily health check job
     scheduler.add_job(
         health_check,
@@ -165,37 +166,25 @@ def setup_scheduler():
         max_instances=1
     )
     
-    logger.info(f"📋 Health check scheduled daily at {HEALTH_CHECK_HOUR:02d}:00")
+    logger.info(f"Health check scheduled daily at {HEALTH_CHECK_HOUR}")
     
     return scheduler
 
 
-def run_scheduler(scheduler):
+def run_scheduler(scheduler: BlockingScheduler):
     """Start the scheduler and handle shutdown."""
-    logger.info(f"Scheduler started - checking every {CHECK_INTERVAL_MINUTES} minutes")
+   
     logger.info("Press Ctrl+C to stop")
-    logger.info("=" * 60)
-    
+
     try:
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):
         logger.info("\nShutting down ticket monitor...")
-        
-        # Calculate final uptime
-        if bot_start_time:
-            uptime = datetime.now() - bot_start_time
-            days = uptime.days
-            hours, remainder = divmod(uptime.seconds, 3600)
-            minutes, _ = divmod(remainder, 60)
-            
-            if days > 0:
-                uptime_str = f"{days}d {hours}h {minutes}m"
-            elif hours > 0:
-                uptime_str = f"{hours}h {minutes}m"
-            else:
-                uptime_str = f"{minutes}m"
-        else:
-            uptime_str = "Unknown"
+        uptime = datetime.now() - bot_start_time
+        days = uptime.days
+        hours, remainder = divmod(uptime.seconds, 3600)
+        minutes, _ = divmod(remainder, 60)
+        uptime_str = f"{days}d {hours}h {minutes}m"
         
         # Log final statistics
         logger.info(f"Total checks performed: {check_counter}")
@@ -223,7 +212,7 @@ def main():
     logger.info("=" * 60)
     
     # Setup and run scheduler to check every X minutes
-    scheduler = setup_scheduler()
+    scheduler: BlockingScheduler = setup_scheduler()
     run_scheduler(scheduler)
 
 
