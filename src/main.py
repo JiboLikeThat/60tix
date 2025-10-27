@@ -183,7 +183,13 @@ def main():
     logger.info("Starting TSV 1860 München Ticket Monitor")
     logger.info(f"Started at: {bot_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
     logger.info("=" * 60)
-    logger.info("State will be initialized on first check if needed")
+    
+    # Run first check immediately
+    logger.info("Running initial check...")
+    scheduled_check()
+    
+    logger.info("=" * 60)
+    logger.info(f"Continuing with scheduled checks every {CHECK_INTERVAL_MINUTES} minutes")
     logger.info("=" * 60)
     
     # Setup and run scheduler to check every X minutes
