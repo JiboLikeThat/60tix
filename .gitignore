@@ -26,17 +26,22 @@ env/
 ENV/
 .venv
 
-# UV
+# UV (Python)
 .uv/
-uv.lock
+python/uv.lock
+python/.venv
 
-# State files
+# State files (any implementation)
 state.json
 games_state.json
 debug_page.html
+python/state.json
+rust/state.json
 
-# Environment variables
+# Environment variables (any implementation)
 .env
+python/.env
+rust/.env
 
 # IDE
 .vscode/
@@ -48,8 +53,11 @@ debug_page.html
 # Logs
 *.log
 
-# Environment variables
-.env
+# Rust
+rust/target/
+rust/Cargo.lock
+rust/**/*.rs.bk
+rust/.cargo/
 
 # OS
 .DS_Store

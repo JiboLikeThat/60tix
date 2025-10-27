@@ -6,119 +6,47 @@ Automatically monitors the [TSV 1860 München ticketing website](https://www.tsv
 
 This is a personal project for educational purposes. Please use responsibly and respect the website's terms of service. The bot uses a reasonable check interval (default: 10 minutes) to minimize server load.
 
-## Requirements
+## Features
 
-- Python 3.13+
-- [UV](https://github.com/astral-sh/uv) package manager
+- 🔄 Automatic monitoring with configurable intervals
+- 📱 Telegram notifications for new games
+- 💾 Persistent state tracking across restarts
+- 🏥 Daily health check messages
+- 🛡️ Handles website waiting room/queue system
+- 🤖 Headless browser automation
 
-## Installation
+## Implementations
 
-1. Install dependencies using UV:
+This project provides multiple implementations to choose from:
 
+### 🐍 [Python](./python/)
+Full-featured implementation using Playwright for web scraping.
+- ✅ **Production ready**
+- Browser automation with Playwright
+- APScheduler for task scheduling
+- Comprehensive test suite
+
+**Quick Start:**
 ```bash
+cd python
 uv sync
-```
-
-2. Install Playwright browsers:
-
-```bash
-uv run playwright install chromium
-```
-
-3. Configure Telegram notifications (optional but recommended):
-
-```bash
-# Copy the example env file
-cp .env.example .env
-
-# Edit .env and add your Telegram credentials
-# See "Telegram Setup" section below for details
-```
-
-## Telegram Setup
-
-To receive notifications when new tickets are available:
-
-### 1. Create a Telegram Bot
-
-1. Open Telegram and search for `@BotFather`
-2. Send `/newbot`
-3. Follow prompts to create your bot
-4. **Save the bot token** (looks like `1234567890:ABCdefGHI...`)
-
-### 2. Get Your Chat ID
-
-**For personal notifications:**
-1. Search for `@userinfobot` on Telegram
-2. Start a chat with it
-3. It will reply with your **Chat ID** (e.g., `123456789`)
-
-**For group notifications:**
-1. Create a Telegram group
-2. Add your bot to the group
-3. Make bot admin (or allow all members to post)
-4. Add `@RawDataBot` to your group temporarily
-5. It will post the group info including **Chat ID** (negative number like `-1001234567890`)
-6. Remove @RawDataBot from group
-
-Alternativly:
-- Login to the Telegram web app (browser)
-- Go to the chat/group you want to add
-- Copy the group **Chat ID** out of the URL (the number after #)
-
-### 3. Configure Environment Variables
-
-Edit `.env` file with your credentials and preferences:
-
-```bash
-# Required - Your Telegram bot credentials
-TELEGRAM_BOT_TOKEN=your_bot_token_from_botfather
-TELEGRAM_CHAT_ID=your_chat_id_or_group_id
-
-# Optional - Check interval in minutes (default: 10)
-CHECK_INTERVAL_MINUTES=10
-
-# Optional - Daily health check hour in 24h format (default: 9 for 9 AM)
-HEALTH_CHECK_HOUR=9
-```
-
-### 4. Test Your Setup
-
-```bash
-uv run python -m src.tests.test_telegram
-```
-
-If successful, you'll receive a test message on Telegram!
-
-## Usage
-
-### Run the Monitor
-
-```bash
 uv run python -m src.main
 ```
 
-Or activate the virtual environment first:
+**See [python/README.md](./python/README.md) for full documentation.**
 
-```bash
-source .venv/bin/activate  # On macOS/Linux
-python -m src.main
-```
-
-### Test the Scraper
-
-Test the scraper without starting the scheduler:
-
-```bash
-uv run python -m src.scraper
-```
+### 🦀 Rust _(Coming Soon)_
+High-performance implementation with minimal resource usage.
+- 🚧 **In development**
+- Planned features: tokio async runtime, headless_chrome
+- Lower memory footprint
+- Faster startup time
 
 ## Notifications
 
 The bot sends Telegram messages for the following events:
 
 ### 🎟️ New Games
-
 When new games/tickets become available, you'll receive an instant notification with:
 - 🆕 Team matchup (e.g., "TSV 1860 München vs. FC Energie Cottbus")
 - 📅 Game date and time
@@ -126,8 +54,7 @@ When new games/tickets become available, you'll receive an instant notification 
 - 🔗 Direct link to the ticketing page
 
 ### 💚 Health Checks
-
-The bot sends a daily status message at the configured time showing:
+Daily status message showing:
 - ✅ Bot status (running/operational)  
 - 🕐 Start time
 - ⏱️ Uptime
@@ -135,21 +62,60 @@ The bot sends a daily status message at the configured time showing:
 - 📅 Last check timestamp
 
 ### 🛑 Shutdown Notifications
-
-When you stop the bot (Ctrl+C), it automatically sends a final notification with:
+When stopping the bot (Ctrl+C), you'll receive a final notification with:
 - 🛑 Shutdown status
 - 🕐 Start and stop times
 - ⏱️ Total uptime
 - 🔄 Total checks performed
 
+## Telegram Setup
 
+To receive notifications, you'll need to create a Telegram bot:
 
+### 1. Create a Bot
+1. Open Telegram and search for `@BotFather`
+2. Send `/newbot` and follow prompts
+3. Save the bot token (looks like `1234567890:ABCdefGHI...`)
+
+### 2. Get Your Chat ID
+
+**For personal notifications:**
+- Use `@userinfobot` on Telegram to get your chat ID
+
+**For group notifications:**
+- Add `@RawDataBot` to your group temporarily to see the group ID (negative number like `-1001234567890`)
+- Or login to Telegram web and copy the ID from the URL
+
+### 3. Configure
+Create a `.env` file in your chosen implementation directory with:
+```bash
+TELEGRAM_BOT_TOKEN=your_bot_token_from_botfather
+TELEGRAM_CHAT_ID=your_chat_id_or_group_id
+CHECK_INTERVAL_MINUTES=10
+HEALTH_CHECK_HOUR=9
+```
+
+## Project Structure
+
+```
+60tix/
+├── python/              # Python implementation
+│   ├── src/
+│   │   ├── main.py
+│   │   ├── scraper.py
+│   │   ├── notifier.py
+│   │   └── tests/
+│   ├── pyproject.toml
+│   └── README.md
+├── rust/                # Rust implementation (coming soon)
+├── LICENSE
+└── README.md            # This file
+```
 
 ## Contributing
 
-Feel free to fork and open issues or PRs
+Feel free to fork and open issues or PRs! Contributions are welcome for both existing and new implementations.
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
-
