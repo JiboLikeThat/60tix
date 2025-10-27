@@ -68,12 +68,18 @@ Alternativly:
 
 ### 3. Configure Environment Variables
 
-Edit `.env` file:
+Edit `.env` file with your credentials and preferences:
+
 ```bash
+# Required - Your Telegram bot credentials
 TELEGRAM_BOT_TOKEN=your_bot_token_from_botfather
 TELEGRAM_CHAT_ID=your_chat_id_or_group_id
+
+# Optional - Check interval in minutes (default: 10)
 CHECK_INTERVAL_MINUTES=10
-HEALTH_CHECK_HOUR=9  # Daily status message at 9 AM
+
+# Optional - Daily health check hour in 24h format (default: 9 for 9 AM)
+HEALTH_CHECK_HOUR=9
 ```
 
 ### 4. Test Your Setup
@@ -107,24 +113,35 @@ Test the scraper without starting the scheduler:
 uv run python -m src.scraper
 ```
 
-## Configuration
+## Notifications
 
-Configure via `.env` file:
-- `TELEGRAM_BOT_TOKEN`: Your bot token from @BotFather
-- `TELEGRAM_CHAT_ID`: Your chat or group ID
-- `CHECK_INTERVAL_MINUTES`: How often to check for new tickets (default: 10 minutes)
-- `HEALTH_CHECK_HOUR`: Daily health check time in 24h format (default: 9 for 9 AM)
+The bot sends Telegram messages for the following events:
 
+### 🎟️ New Games
 
-## Notification
-#### Health Check
+When new games/tickets become available, you'll receive an instant notification with:
+- 🆕 Team matchup (e.g., "TSV 1860 München vs. FC Energie Cottbus")
+- 📅 Game date and time
+- 🏟️ Matchday information (e.g., "7. Heimspiel")
+- 🔗 Direct link to the ticketing page
 
-The bot sends a daily status message at the configured time showing
+### 💚 Health Checks
 
+The bot sends a daily status message at the configured time showing:
+- ✅ Bot status (running/operational)  
+- 🕐 Start time
+- ⏱️ Uptime
+- 🔄 Total checks performed
+- 📅 Last check timestamp
 
-#### Shutdown Notifications
+### 🛑 Shutdown Notifications
 
 When you stop the bot (Ctrl+C), it automatically sends a final notification with:
+- 🛑 Shutdown status
+- 🕐 Start and stop times
+- ⏱️ Total uptime
+- 🔄 Total checks performed
+
 
 
 
