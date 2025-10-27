@@ -2,6 +2,10 @@
 
 Automatically monitors the [TSV 1860 München ticketing website](https://www.tsv1860-ticketing.de/tsv1860/) for new games and sends Telegram notifications when new tickets become available.
 
+## ⚠️ Disclaimer
+
+This is a personal project for educational purposes. Please use responsibly and respect the website's terms of service. The bot uses a reasonable check interval (default: 10 minutes) to minimize server load.
+
 ## Requirements
 
 - Python 3.13+
@@ -130,7 +134,12 @@ When you stop the bot (Ctrl+C), it automatically sends a final notification with
 - ⏱️ Total uptime
 - 🔄 Total checks performed
 
+
+## Contributing
+
+This is a personal project, feel free to fork, open issues or PRs
+
 ## License
 
-Personal project - use at your own discretion.
+MIT License - see [LICENSE](LICENSE) file for details.
 
