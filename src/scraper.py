@@ -62,7 +62,7 @@ def fetch_page() -> str:
             page = browser.new_page()
             
             logger.info(f"Navigating to {TICKETING_URL}")
-            page.goto(TICKETING_URL, wait_until='networkidle', timeout=60000)
+            page.goto(TICKETING_URL, wait_until='domcontentloaded', timeout=60000)
             
             # Check if we're in the waiting room
             if 'waiting-room' in page.url or 'Warteraum' in page.title():
@@ -70,12 +70,10 @@ def fetch_page() -> str:
                 
                 # Wait for the "Zum Shop" button to appear (max 5 minutes)
                 try:
-                    page.wait_for_selector('button.enter-button', timeout=300000)
-                    logger.info("✅ Queue passed! Entering shop...")
-                    page.click('button.enter-button')
-                    page.wait_for_load_state('networkidle', timeout=60000)
+                    # wait for 30 minutes in the queue 
+                    page.wait_for_url(TICKETING_URL, wait_until='domcontentloaded', timeout=1800000)
                 except PlaywrightTimeout:
-                    logger.error("⏰ Timeout waiting for queue to pass")
+                    logger.error("Timeout waiting for page to load")
                     browser.close()
                     raise
             
