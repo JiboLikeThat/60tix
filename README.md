@@ -62,7 +62,7 @@ To receive notifications when new tickets are available:
 6. Remove @RawDataBot from group
 
 Alternativly:
-- Login to telegram web
+- Login to the Telegram web app (browser)
 - Go to the chat/group you want to add
 - Copy the group **Chat ID** out of the URL (the number after #)
 
@@ -115,29 +115,22 @@ Configure via `.env` file:
 - `CHECK_INTERVAL_MINUTES`: How often to check for new tickets (default: 10 minutes)
 - `HEALTH_CHECK_HOUR`: Daily health check time in 24h format (default: 9 for 9 AM)
 
-Target URL: https://www.tsv1860-ticketing.de/tsv1860/
 
-### Health Checks
+## Notification
+#### Health Check
 
-The bot sends a daily status message at the configured time showing:
-- ✅ Bot status (running/operational)
-- 🕐 Start time
-- ⏱️ Uptime
-- 🔄 Total checks performed
-- 📅 Last check timestamp
+The bot sends a daily status message at the configured time showing
 
-### Shutdown Notifications
+
+#### Shutdown Notifications
 
 When you stop the bot (Ctrl+C), it automatically sends a final notification with:
-- 🛑 Shutdown status
-- 🕐 Start and stop times
-- ⏱️ Total uptime
-- 🔄 Total checks performed
+
 
 
 ## Contributing
 
-This is a personal project, feel free to fork, open issues or PRs
+Feel free to fork and open issues or PRs
 
 ## License
 
